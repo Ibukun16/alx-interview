@@ -19,3 +19,6 @@ print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))
 
 n = 20
 print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))
+
+n = 19
+print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))

@@ -16,10 +16,12 @@ def minOperations(n):
         return (0)
 
     operations = 0
+    
     # Start from n and find its factors
-    for c in range(2, n + 1):
-        while n % c == 0:  # While c is a factor of n
-            operations += c  # Count operations (c for Copy All+c-1 for pastes)
-            n //= c   # Reduce n by the factor c
+    while n > 1:
+        for factor in range(2, n + 1):
+            if n % factor == 0:  # While fac is a factor of n
+                operations += factor  # Count operations
+                n //= factor # Reduce n by the factor
 
     return operations
