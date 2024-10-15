@@ -18,10 +18,8 @@ def minOperations(n):
     operations = 0
 
     # Start from n and find its factors
-    while n > 1:
-        for factor in range(2, n + 1):
-            if n % factor == 0:  # While fac is a factor of n
-                operations += factor  # Count operations
-                n //= factor  # Reduce n by the factor
-
+    for f in range(2, n + 1):
+        if n % f == 0:  # While f is a factor of n
+            operations += f  # Count operations
+            n /= f  # Reduce n by the factor
     return operations
