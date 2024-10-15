@@ -12,14 +12,14 @@ def minOperations(n):
     Calculates the fewest numbermof operations needed
     to result in exactly n H characters in the file.
     """
-    if not isinstance(n, int) or n <= 1:
-        return (0)
+    if not isinstance(n, int) or n < 2:
+        return 0
 
-    operations = 0
+    numOps = 0
 
     # Start from n and find its factors
-    for f in range(2, n + 1):
-        if n % f == 0:  # While f is a factor of n
-            operations += f  # Count operations
-            n /= f  # Reduce n by the factor
-    return operations
+    for c in range(2, n + 1):
+        while n % c == 0:
+            numOps += c
+            n /= c
+    return int(numOps)
