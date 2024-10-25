@@ -20,48 +20,88 @@ status codes should be printed in ascending order
 line list = [<IP Address>, -, [<date>], "GET /projects/260 HTTP/1.1",
 <status code>, <file size>]
 """
+import re
 
 
-import sys
+def extract_input(input_line):
+    '''Extracts sections of a line of an HTTP request log.
+    '''
+    fp = (
+        r'\s*(?P<ip>\S+)\s*',
+        r'\s*\[(?P<date>\d+\-\d+\-\d+ \d+:\d+:\d+\.\d+)\]',
+        r'\s*"(?P<request>[^"]*)"\s*',
+        r'\s*(?P<status_code>\S+)',
+        r'\s*(?P<file_size>\d+)'
+    )
+    info = {
+        'status_code': 0,
+        'file_size': 0,
+    }
+    log_fmt = '{}\\-{}{}{}{}\\s*'.format(fp[0], fp[1], fp[2], fp[3], fp[4])
+    resp_match = re.fullmatch(log_fmt, input_line)
+    if resp_match is not None:
+        status_code = resp_match.group('status_code')
+        file_size = int(resp_match.group('file_size'))
+        info['status_code'] = status_code
+        info['file_size'] = file_size
+    return info
 
-# stores the count of all status codes in a dictionary
-c = 0
-tot_size = 0
-status_code_dict = {'200': 0,
-                    '301': 0,
-                    '400': 0,
-                    '401': 0,
-                    '403': 0,
-                    '404': 0,
-                    '405': 0,
-                    '500': 0}
 
-try:
-    for line in sys.stdin:
-        line_args = line.split(" ")
-        if len(line_args) > 2:
-            status_code = line_args[-2]
-            file_sz = int(line_args[-1])
-            # check if status code obtained is in dict and incr c by 1
-            if status_code in status_code_dict:
-                status_code_dict[status_code] += 1
-            # update tot_file_sz and count c
-            tot_size += file_sz
+def print_statistics(total_size, status_code_dict):
+    '''Prints the accumulated statistics of the HTTP request log.
+    '''
+    print('File size: {:d}'.format(total_size), flush=True)
+    for status_code in sorted(status_code_dict.keys()):
+        num = status_code_dict.get(status_code, 0)
+        if num > 0:
+            print('{:s}: {:d}'.format(status_code, num), flush=True)
+
+
+def update_metrics(line, total_size, status_code_dict):
+    '''Updates the metrics from a given HTTP request log.
+
+    Args:
+        line (str): The line of input from which to retrieve the metrics.
+
+    Returns:
+        int: The new total file size.
+    '''
+    line_info = extract_input(line)
+    status_code = line_info.get('status_code', '0')
+    if status_code in status_code_dict.keys():
+        status_code_dict[status_code] += 1
+    return total_size + line_info['file_size']
+
+
+def run():
+    '''Start the log parser.
+    '''
+    c = 0
+    total_size = 0
+    status_code_dict = {
+        '200': 0,
+        '301': 0,
+        '400': 0,
+        '401': 0,
+        '403': 0,
+        '404': 0,
+        '405': 0,
+        '500': 0,
+    }
+    try:
+        while True:
+            line = input()
+            total_size = update_metrics(
+                line,
+                total_size,
+                status_code_dict,
+            )
             c += 1
-        if c % 10 == 0:
-            print(f"File size: {tot_size}")
-            sorted_keys = sorted(status_code_dict.keys())
-            for key in sorted_keys:
-                val = status_code_dict[key]
-                if val != 0:
-                    print(f"{key}: {val}")
-            c = 0
-except Exception as err:
-    pass
-finally:
-    print(f"File size: {tot_size}")
-    sorted_keys = sorted(status_code_dict.keys())
-    for key in sorted_keys:
-        val = status_code_dict[key]
-        if val != 0:
-            print(f"{key}: {val}")
+            if c % 10 == 0:
+                print_statistics(total_size, status_code_dict)
+    except (KeyboardInterrupt, EOFError):
+        print_statistics(total_size, status_code_dict)
+
+
+if __name__ == '__main__':
+    run()
