@@ -38,27 +38,26 @@ status_code_dict = {'200': 0,
 
 try:
     for line in sys.stdin:
-        line_list = line.split(" ")
-        if len(line_list) > 4:
-            status_code = line_list[-2]
-            file_sz = int(line_list[-1])
+        line_args = line.split(" ")
+        if len(line_args) > 2:
+            status_code = line_args[-2]
+            file_sz = int(line_args[-1])
             # check if status code obtained is in dict and incr c by 1
-            if status_code in status_code_dict.keys():
+            if status_code in status_code_dict:
                 status_code_dict[status_code] += 1
             # update tot_file_sz and count c
             tot_file_sz += file_sz
             c += 1
-        if c == 10:
-            c = 0  # reset count
-            print("File size: {:d}".format(tot_file_sz), flush=True)
+        if c % 10 == 0:
+            print(f"File size: {tot_file_sz}", flush=True)
             for key, val in sorted(status_code_dict.items()):
                 if val != 0:
-                    print("{}: {}".format(key, val), flush=True)
-except Exception as err:
+                    print(f"{key}: {val}", flush=True)
+            c = 0
+except Exception:
     pass
-
 finally:
-    print(f"File size: {tot_file_sz}")
+    print(f"File size: {tot_file_sz}", flush=True)
     for key, val in sorted(status_code_dict.items()):
         if val != 0:
-            print("{}: {}".format(key, val), flush=True)
+            print(f"{key}: {val}", flush=True)
