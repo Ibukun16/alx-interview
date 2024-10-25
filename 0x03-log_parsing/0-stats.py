@@ -26,7 +26,7 @@ import sys
 
 # stores the count of all status codes in a dictionary
 c = 0
-tot_file_sz = 0
+tot_size = 0
 status_code_dict = {'200': 0,
                     '301': 0,
                     '400': 0,
@@ -46,18 +46,22 @@ try:
             if status_code in status_code_dict:
                 status_code_dict[status_code] += 1
             # update tot_file_sz and count c
-            tot_file_sz += file_sz
+            tot_size += file_sz
             c += 1
         if c % 10 == 0:
-            print(f"File size: {tot_file_sz}", flush=True)
-            for key, val in sorted(status_code_dict.items()):
+            print(f"File size: {tot_size}")
+            sorted_keys = sorted(status_code_dict.keys())
+            for key in sorted_keys:
+                val = status_code_dict[key]
                 if val != 0:
-                    print(f"{key}: {val}", flush=True)
+                    print(f"{key}: {val}")
             c = 0
-except Exception:
+except Exception as err:
     pass
 finally:
-    print(f"File size: {tot_file_sz}", flush=True)
-    for key, val in sorted(status_code_dict.items()):
+    print(f"File size: {tot_size}")
+    sorted_keys = sorted(status_code_dict.keys())
+    for key in sorted_keys:
+        val = status_code_dict[key]
         if val != 0:
-            print(f"{key}: {val}", flush=True)
+            print(f"{key}: {val}")
