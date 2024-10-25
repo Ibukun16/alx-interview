@@ -50,10 +50,10 @@ try:
             c += 1
         if c == 10:
             c = 0  # reset count
-            print(f"File size: {tot_file_sz}")
+            print("File size: {:d}".format(tot_file_sz), flush=True)
             for key, val in sorted(status_code_dict.items()):
                 if val != 0:
-                    print(f"{key}: {val}")
+                    print("{}: {}".format(key, val), flush=True)
 except Exception as err:
     pass
 
@@ -61,4 +61,4 @@ finally:
     print(f"File size: {tot_file_sz}")
     for key, val in sorted(status_code_dict.items()):
         if val != 0:
-            print(f"{key}: {val}")
+            print("{}: {}".format(key, val), flush=True)
