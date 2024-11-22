@@ -18,8 +18,8 @@ if (process.argv.length > 2) {
         });
       }));
 
-   Promise.all(characterName)
-     .then(names => console.log(names.join('\n')))
-     .catch(allErr => console.log(allErr));
-});
+    Promise.all(characterName)
+      .then(names => console.log(names.join('\n')))
+      .catch(allErr => console.log(allErr));
+  });
 }
