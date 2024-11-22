@@ -10,8 +10,6 @@ def rotate_2d_matrix(matrix):
     """Define the function that rotate a 2D
     matrix 90 degree clockwise
     """
-    if not isinstance(matrix, list):
-        return
     if len(matrix) <= 0:
         return
     if not all(map(lambda x: type(x) == list, matrix)):
