@@ -19,11 +19,10 @@ def island_perimeter(grid):
             if cell == 0:
                 continue
             edges = (
-                    g == 0 or (len(grid[g - 1]) > r and grid[g - 1][r] == 0),
-                    r == lr - 1 or (lr > r + 1 and row[r + 1] == 0),
-                    g == lg - 1 or (len(grid[g + 1]) > r
-                                    and grid[g + 1][r] == 0),
-                    r == 0 or row[r - 1] == 0,
-                )
+                    g == 0 or grid[g - 1][r] == 0,
+                    r == lr - 1 or row[r + 1] == 0,
+                    g == lg - 1 or grid[g + 1][r] == 0,
+                    r == 0 or grid[g][r - 1] == 0,
+            )
             perimeter += sum(edges)
     return perimeter
