@@ -2,6 +2,7 @@
 """A module that handles prime game
 """
 
+
 def isWinner(x, nums):
     """Function that determines the winer of a
     prime game session at `x` round.
@@ -17,7 +18,7 @@ def isWinner(x, nums):
     for c, is_prime in enumerate(primes, 1):
         if c == 1 or not is_prime:
             continue
-        for r in range (c + c, max_num + 1, c):
+        for r in range(c + c, max_num + 1, c):
             primes[r - 1] = False
 
     # remove prime and its multiple from max_num in each round
@@ -28,4 +29,3 @@ def isWinner(x, nums):
     if maria_wins == ben_wins:
         return None
     return 'Ben' if ben_wins > maria_wins else 'Maria'
-    
